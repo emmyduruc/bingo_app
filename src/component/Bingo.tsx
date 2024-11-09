@@ -1,20 +1,18 @@
 import React from "react";
 import { FREE_SPACE_INDEX } from "../constant";
 import { useCheckBingo } from "../hooks/useCheckBingo";
+import { SUB_TITLE, TITLE } from "../constant/typography";
 
 export const BingoApp: React.FC = () => {
   const { isBingo, board, resetGame, handleCellClick } = useCheckBingo();
 
-  const title = "Beer Competition Bingo 🍺";
-  const subtitle = "Mark your rounds as you go! First to Bingo wins a cheers!";
-
   return (
     <div className="flex flex-col items-center min-h-screen bg-gradient-to-b from-yellow-100 to-yellow-300 p-4">
       <h1 className="text-3xl md:text-4xl font-bold mb-2 text-yellow-800 text-center">
-        {title}
+        {TITLE}
       </h1>
       <p className="text-lg md:text-xl mb-6 text-yellow-600 text-center">
-        {subtitle}
+        {SUB_TITLE}
       </p>
 
       <div className="grid grid-cols-5 gap-2 w-full max-w-md md:max-w-lg lg:max-w-2xl mx-auto">
