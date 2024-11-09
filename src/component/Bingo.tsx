@@ -5,6 +5,7 @@ import { FREE_SPACE_INDEX, GRID_SIZE } from "../constant";
 
 export const BingoApp: React.FC = () => {
   const [board, setBoard] = useState<Cell[]>([]);
+  const [isBingo, setIsBingo] = useState(false);
 
   const shuffleArray = (array: string[]): string[] => {
     return array
@@ -29,7 +30,7 @@ export const BingoApp: React.FC = () => {
     <div className="flex flex-col items-center min-h-screen bg-gray-100 p-4">
       <h1 className="text-2xl font-bold mb-6">Bingo Game 🎉</h1>
       <div className="grid grid-cols-5 gap-2">
-        {board.map((cell, index) => (
+        {board?.map((cell, index) => (
           <div
             key={index}
             className={`p-4 text-center border rounded-lg cursor-pointer
@@ -37,13 +38,15 @@ export const BingoApp: React.FC = () => {
               ${index === FREE_SPACE_INDEX ? "bg-yellow-300" : ""}
             `}
           >
-            <p className="text-sm font-semibold">{cell.phrase}</p>
+            <p className="text-sm font-semibold">{cell?.phrase}</p>
           </div>
         ))}
       </div>
-      <div className="mt-6 p-4 bg-green-500 text-white font-bold text-lg rounded-lg animate-bounce">
-        Bingo! 🎉
-      </div>
+      {isBingo && (
+        <div className="mt-6 p-4 bg-green-500 text-white font-bold text-lg rounded-lg animate-bounce">
+          Bingo! 🎉
+        </div>
+      )}
     </div>
   );
 };
