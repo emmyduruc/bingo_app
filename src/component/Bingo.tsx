@@ -1,108 +1,53 @@
-import React, { useEffect, useState } from "react";
-import { phrases } from "../server/mock.phrases";
-import { Cell } from "../model/bingo.model";
-import { FREE_SPACE_INDEX, GRID_SIZE } from "../constant";
+import React from "react";
+import { FREE_SPACE_INDEX } from "../constant";
+import { useCheckBingo } from "../hooks/useCheckBingo";
 
 export const BingoApp: React.FC = () => {
-  const [board, setBoard] = useState<Cell[]>([]);
-  const [isBingo, setIsBingo] = useState(false);
+  const { isBingo, board, resetGame, handleCellClick } = useCheckBingo();
 
-  const shuffleBingoPhrases = (array: string[]): string[] => {
-    return array
-      .map((item) => ({ item, sortKey: Math.random() }))
-      .sort((a, b) => a.sortKey - b.sortKey)
-      .map(({ item }) => item);
-  };
-
-  useEffect(() => {
-    const shuffledPhrases = shuffleBingoPhrases(phrases).slice(
-      0,
-      GRID_SIZE * GRID_SIZE
-    );
-    const initialBoard = shuffledPhrases.map((phrase, index) => ({
-      phrase,
-      selected: index === FREE_SPACE_INDEX,
-    }));
-    setBoard(initialBoard);
-  }, []);
-
-  const checkBingo = (updatedBoard: Cell[]) => {
-    const rows = Array(GRID_SIZE).fill(0);
-    const cols = Array(GRID_SIZE).fill(0);
-    let diag1 = 0;
-    let diag2 = 0;
-
-    updatedBoard.forEach((cell, index) => {
-      if (cell.selected) {
-        const row = Math.floor(index / GRID_SIZE);
-        const col = index % GRID_SIZE;
-
-        rows[row]++;
-        cols[col]++;
-        if (row === col) diag1++;
-        if (row + col === GRID_SIZE - 1) diag2++;
-      }
-    });
-
-    if (
-      rows.includes(GRID_SIZE) ||
-      cols.includes(GRID_SIZE) ||
-      diag1 === GRID_SIZE ||
-      diag2 === GRID_SIZE
-    ) {
-      setIsBingo(true);
-    }
-  };
-
-  const resetGame = () => {
-    setIsBingo(false);
-    const shuffledPhrases = shuffleBingoPhrases(phrases).slice(
-      0,
-      GRID_SIZE * GRID_SIZE
-    );
-    const initialBoard = shuffledPhrases.map((phrase, index) => ({
-      phrase,
-      selected: index === FREE_SPACE_INDEX,
-    }));
-    setBoard(initialBoard);
-  };
-
-  console.log({ isBingo });
-
-  const handleCellClick = (index: number) => {
-    if (isBingo || index === FREE_SPACE_INDEX) return;
-
-    const updatedBoard = board.map((cell, i) =>
-      i === index ? { ...cell, selected: !cell.selected } : cell
-    );
-
-    setBoard(updatedBoard);
-    checkBingo(updatedBoard);
-  };
+  const title = "Beer Competition Bingo 🍺";
+  const subtitle = "Mark your rounds as you go! First to Bingo wins a cheers!";
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-gray-100 p-4">
-      <h1 className="text-2xl font-bold mb-6">Bingo Game 🎉</h1>
-      <div className="grid grid-cols-5 gap-2">
-        {board?.map((cell, index) => (
+    <div className="flex flex-col items-center min-h-screen bg-gradient-to-b from-yellow-100 to-yellow-300 p-4">
+      <h1 className="text-3xl md:text-4xl font-bold mb-2 text-yellow-800 text-center">
+        {title}
+      </h1>
+      <p className="text-lg md:text-xl mb-6 text-yellow-600 text-center">
+        {subtitle}
+      </p>
+
+      <div className="grid grid-cols-5 gap-2 w-full max-w-md md:max-w-lg lg:max-w-2xl mx-auto">
+        {board.map((cell, index) => (
           <div
             key={index}
             onClick={() => handleCellClick(index)}
-            className={`p-4 text-center border rounded-lg cursor-pointer
-              ${cell.selected ? "bg-green-300" : "bg-white"}
-              ${index === FREE_SPACE_INDEX ? "bg-yellow-300" : ""}
+            className={`p-2 md:p-4 lg:p-6 text-center border-2 rounded-lg cursor-pointer transition-all transform
+              ${
+                cell.selected
+                  ? "bg-orange-500 text-white animate-bounce"
+                  : "bg-gray-100 hover:bg-blue-200 hover:border-blue-500 hover:shadow-lg"
+              }
+              ${
+                index === FREE_SPACE_INDEX
+                  ? "bg-red-500 text-white font-bold"
+                  : ""
+              }
             `}
           >
-            <p className="text-sm font-semibold">{cell?.phrase}</p>
+            <p className="text-sm md:text-lg lg:text-xl font-semibold">
+              {cell.phrase}
+            </p>
           </div>
         ))}
       </div>
+
       {isBingo && (
         <div
           onClick={resetGame}
-          className="mt-6 p-4 bg-green-500 text-white font-bold text-lg rounded-lg animate-bounce"
+          className="mt-6 p-4 bg-red-500 text-white font-bold text-lg md:text-xl rounded-lg shadow-lg animate-bounce cursor-pointer transition-transform transform hover:scale-110"
         >
-          Bingo! 🎉
+          Bingo! 🎉 Cheers to the champion!
         </div>
       )}
     </div>
