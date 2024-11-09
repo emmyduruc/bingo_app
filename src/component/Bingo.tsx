@@ -54,6 +54,21 @@ export const BingoApp: React.FC = () => {
     }
   };
 
+  const resetGame = () => {
+    setIsBingo(false);
+    const shuffledPhrases = shuffleBingoPhrases(phrases).slice(
+      0,
+      GRID_SIZE * GRID_SIZE
+    );
+    const initialBoard = shuffledPhrases.map((phrase, index) => ({
+      phrase,
+      selected: index === FREE_SPACE_INDEX,
+    }));
+    setBoard(initialBoard);
+  };
+
+  console.log({ isBingo });
+
   const handleCellClick = (index: number) => {
     if (isBingo || index === FREE_SPACE_INDEX) return;
 
@@ -83,7 +98,10 @@ export const BingoApp: React.FC = () => {
         ))}
       </div>
       {isBingo && (
-        <div className="mt-6 p-4 bg-green-500 text-white font-bold text-lg rounded-lg animate-bounce">
+        <div
+          onClick={resetGame}
+          className="mt-6 p-4 bg-green-500 text-white font-bold text-lg rounded-lg animate-bounce"
+        >
           Bingo! 🎉
         </div>
       )}
