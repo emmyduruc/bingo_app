@@ -7,7 +7,7 @@ export const BingoApp: React.FC = () => {
   const [board, setBoard] = useState<Cell[]>([]);
   const [isBingo, setIsBingo] = useState(false);
 
-  const shuffleArray = (array: string[]): string[] => {
+  const shuffleBingoPhrases = (array: string[]): string[] => {
     return array
       .map((item) => ({ item, sortKey: Math.random() }))
       .sort((a, b) => a.sortKey - b.sortKey)
@@ -15,7 +15,7 @@ export const BingoApp: React.FC = () => {
   };
 
   useEffect(() => {
-    const shuffledPhrases = shuffleArray(phrases).slice(
+    const shuffledPhrases = shuffleBingoPhrases(phrases).slice(
       0,
       GRID_SIZE * GRID_SIZE
     );
@@ -26,6 +26,45 @@ export const BingoApp: React.FC = () => {
     setBoard(initialBoard);
   }, []);
 
+  const checkBingo = (updatedBoard: Cell[]) => {
+    const rows = Array(GRID_SIZE).fill(0);
+    const cols = Array(GRID_SIZE).fill(0);
+    let diag1 = 0;
+    let diag2 = 0;
+
+    updatedBoard.forEach((cell, index) => {
+      if (cell.selected) {
+        const row = Math.floor(index / GRID_SIZE);
+        const col = index % GRID_SIZE;
+
+        rows[row]++;
+        cols[col]++;
+        if (row === col) diag1++;
+        if (row + col === GRID_SIZE - 1) diag2++;
+      }
+    });
+
+    if (
+      rows.includes(GRID_SIZE) ||
+      cols.includes(GRID_SIZE) ||
+      diag1 === GRID_SIZE ||
+      diag2 === GRID_SIZE
+    ) {
+      setIsBingo(true);
+    }
+  };
+
+  const handleCellClick = (index: number) => {
+    if (isBingo || index === FREE_SPACE_INDEX) return;
+
+    const updatedBoard = board.map((cell, i) =>
+      i === index ? { ...cell, selected: !cell.selected } : cell
+    );
+
+    setBoard(updatedBoard);
+    checkBingo(updatedBoard);
+  };
+
   return (
     <div className="flex flex-col items-center min-h-screen bg-gray-100 p-4">
       <h1 className="text-2xl font-bold mb-6">Bingo Game 🎉</h1>
@@ -33,6 +72,7 @@ export const BingoApp: React.FC = () => {
         {board?.map((cell, index) => (
           <div
             key={index}
+            onClick={() => handleCellClick(index)}
             className={`p-4 text-center border rounded-lg cursor-pointer
               ${cell.selected ? "bg-green-300" : "bg-white"}
               ${index === FREE_SPACE_INDEX ? "bg-yellow-300" : ""}
