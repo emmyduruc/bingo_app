@@ -12,6 +12,12 @@
 🌐 Overview
 My Bingo game interacts with a theme inspired by the bar “Landgang Brauerei (Bahrenfeld)” where real-life beer BINGO competitions brought excitement. Reimagined for a digital format, the app uses numbers and glasses as the theme and is optimized for all devices, ensuring a seamless experience on desktop, tablet, and mobile.
 
+HOW TO PLAY:
+
+- Click on the "Draw next" button
+- Match the suggested number to that of the cell if the number does not exist in cell, Click on the "Drawer button" until a number that matches that in the cells is shown.
+- When a user wins, is either you continue or you reset the game.
+
 ✨ Key Features
 
     •	Multiple Bingo Wins: Players can achieve multiple bingos across rows, columns, and diagonals within a single game.
@@ -60,9 +66,9 @@ setBoard(shuffledBoard);
 
 💡 Decision-Making Process
 
-Why Numbers and Glasses?
+Why Number Draws?
 
-The “Cheers!” theme with numbers and glasses was inspired by a social setting. This theme brings a sense of fun and adds to the celebratory, casual drinking atmosphere that’s ideal for group interactions.
+My game now revolves around drawing random numbers, similar to a classic Bingo experience. This change enhances the gameplay by simulating the traditional Bingo format, where players mark off numbers on their cards as each number is drawn.
 
 Why Confetti Animation?
 
