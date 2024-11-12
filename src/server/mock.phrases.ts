@@ -1,27 +1,13 @@
-export const phrases = [
-  "1️⃣",
-  "2️⃣",
-  "3️⃣",
-  "4️⃣",
-  "5️⃣",
-  "6️⃣",
-  "7️⃣",
-  "8️⃣",
-  "9️⃣",
-  "🔟",
-  "11",
-  "12",
-  "13",
-  "14",
-  "15",
-  "16",
-  "17",
-  "18",
-  "19",
-  "20",
-  "🍺",
-  "🍻",
-  "🥂",
-  "🥃",
-  "🍹",
-];
+export const BINGO_NUMBERS = Array.from({ length: 75 }, (_, i) => i + 1);
+
+export const drawNumber = (
+  numbers: number[]
+): { drawnNumber: number | null; remainingNumbers: number[] } => {
+  if (numbers.length === 0) return { drawnNumber: null, remainingNumbers: [] };
+
+  const randomIndex = Math.floor(Math.random() * numbers.length);
+  const drawnNumber = numbers[randomIndex];
+  const remainingNumbers = numbers.filter((num) => num !== drawnNumber);
+
+  return { drawnNumber, remainingNumbers };
+};
