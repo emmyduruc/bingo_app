@@ -1,14 +1,18 @@
+import { Dispatch, SetStateAction } from "react";
 import { GRID_SIZE } from "../constant";
 import { Cell } from "../model/bingo.model";
 
 export const checkBingoHandler = (
   updatedBoard: Cell[],
-  setIsBingo: (value: boolean) => void
+  setBingoCount: Dispatch<SetStateAction<number>>,
+  completedLines: Set<string>,
+  setCompletedLines: (lines: Set<string>) => void
 ): void => {
   const rows = Array(GRID_SIZE).fill(0);
   const cols = Array(GRID_SIZE).fill(0);
   let diag1 = 0;
   let diag2 = 0;
+  const newCompletedLines = new Set(completedLines);
 
   updatedBoard.forEach((cell, index) => {
     if (cell.selected) {
@@ -22,12 +26,33 @@ export const checkBingoHandler = (
     }
   });
 
-  if (
-    rows.includes(GRID_SIZE) ||
-    cols.includes(GRID_SIZE) ||
-    diag1 === GRID_SIZE ||
-    diag2 === GRID_SIZE
-  ) {
-    setIsBingo(true);
+  let newBingos = 0;
+
+  rows.forEach((count, row) => {
+    if (count === GRID_SIZE && !newCompletedLines.has(`row-${row}`)) {
+      newCompletedLines.add(`row-${row}`);
+      newBingos++;
+    }
+  });
+
+  cols.forEach((count, col) => {
+    if (count === GRID_SIZE && !newCompletedLines.has(`col-${col}`)) {
+      newCompletedLines.add(`col-${col}`);
+      newBingos++;
+    }
+  });
+
+  if (diag1 === GRID_SIZE && !newCompletedLines.has("diag1")) {
+    newCompletedLines.add("diag1");
+    newBingos++;
+  }
+  if (diag2 === GRID_SIZE && !newCompletedLines.has("diag2")) {
+    newCompletedLines.add("diag2");
+    newBingos++;
+  }
+
+  if (newBingos > 0) {
+    setBingoCount((prevCount) => prevCount + newBingos);
+    setCompletedLines(newCompletedLines);
   }
 };

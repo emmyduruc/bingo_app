@@ -2,21 +2,37 @@ import { useEffect, useState } from "react";
 import { FREE_SPACE_INDEX, GRID_SIZE } from "../constant";
 import { Cell } from "../model/bingo.model";
 import { phrases } from "../server/mock.phrases";
-import { handleCellClick } from "../utils/handleCellClick";
 import { resetGame } from "../utils/resetGame";
 import { shuffleBingoPhrases } from "../utils/shuffleBingoPhrases";
 import { checkBingoHandler } from "../utils/checkBingoHandler";
 
 export const useCheckBingo = () => {
-  const [isBingo, setIsBingo] = useState(false);
+  const [bingoCount, setBingoCount] = useState(0);
   const [board, setBoard] = useState<Cell[]>([]);
+  const [completedLines, setCompletedLines] = useState<Set<string>>(new Set());
 
-  const handleClick = (index: number) =>
-    handleCellClick(index, board, isBingo, setBoard, (newBoard) =>
-      checkBingoHandler(newBoard, setIsBingo)
+  const handleCellClick = (index: number) => {
+    if (board[index].selected || index === FREE_SPACE_INDEX) return;
+
+    const updatedBoard = board.map((cell, i) =>
+      i === index ? { ...cell, selected: !cell.selected } : cell
     );
 
-  const reset = () => resetGame(setIsBingo, setBoard);
+    setBoard(updatedBoard);
+
+    checkBingoHandler(
+      updatedBoard,
+      setBingoCount,
+      completedLines,
+      setCompletedLines
+    );
+  };
+
+  const reset = () => {
+    setBingoCount(0);
+    setCompletedLines(new Set());
+    resetGame(setBingoCount, setBoard, setCompletedLines);
+  };
 
   useEffect(() => {
     const shuffledPhrases = shuffleBingoPhrases(phrases).slice(
@@ -31,11 +47,9 @@ export const useCheckBingo = () => {
   }, []);
 
   return {
-    isBingo,
+    bingoCount,
     board,
-    handleCellClick: handleClick,
+    handleCellClick,
     resetGame: reset,
-    setBoard,
-    setIsBingo,
   };
 };

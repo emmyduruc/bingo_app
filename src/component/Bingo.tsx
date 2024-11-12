@@ -1,13 +1,24 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FREE_SPACE_INDEX } from "../constant";
 import { useCheckBingo } from "../hooks/useCheckBingo";
 import { SUB_TITLE, TITLE } from "../constant/typography";
+import Confetti from "react-confetti";
 
 export const BingoApp: React.FC = () => {
-  const { isBingo, board, resetGame, handleCellClick } = useCheckBingo();
+  const { bingoCount, board, resetGame, handleCellClick } = useCheckBingo();
 
+  const [showConfetti, setShowConfetti] = useState(false);
+
+  useEffect(() => {
+    if (bingoCount > 0) {
+      setShowConfetti(true);
+      setTimeout(() => setShowConfetti(false), 3000); // Show confetti for 3 seconds
+    }
+  }, [bingoCount]);
+  console.log("bingoCount..", bingoCount);
   return (
     <div className="flex flex-col items-center min-h-screen bg-gradient-to-b from-yellow-100 to-yellow-300 p-4">
+      {showConfetti && <Confetti width={300} height={300} />}
       <h1 className="text-3xl md:text-4xl font-bold mb-2 text-yellow-800 text-center">
         {TITLE}
       </h1>
@@ -40,13 +51,21 @@ export const BingoApp: React.FC = () => {
         ))}
       </div>
 
-      {isBingo && (
-        <div
-          onClick={resetGame}
-          className="mt-6 p-4 bg-red-500 text-white font-bold text-lg md:text-xl rounded-lg shadow-lg animate-bounce cursor-pointer transition-transform transform hover:scale-110"
-        >
-          Bingo! 🎉 Cheers to the champion!
-        </div>
+      {bingoCount > 0 && (
+        <>
+          <div className="mt-6 p-4 bg-green-500 text-white font-bold text-lg md:text-xl rounded-lg animate-bounce">
+            Bingo! 🎉 You have {bingoCount} Bingo(s)!
+          </div>
+
+          <div>
+            <button
+              onClick={resetGame}
+              className="mt-6 p-4 bg-red-500 text-white font-bold text-lg md:text-xl rounded-lg shadow-lg animate-bounce cursor-pointer transition-transform transform hover:scale-110"
+            >
+              Reset Game
+            </button>
+          </div>
+        </>
       )}
     </div>
   );
