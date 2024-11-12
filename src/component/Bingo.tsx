@@ -15,7 +15,7 @@ export const BingoApp: React.FC = () => {
       setTimeout(() => setShowConfetti(false), 3000); // Show confetti for 3 seconds
     }
   }, [bingoCount]);
-  console.log("bingoCount..", bingoCount);
+
   return (
     <div className="flex flex-col items-center min-h-screen bg-gradient-to-b from-yellow-100 to-yellow-300 p-4">
       {showConfetti && <Confetti width={300} height={300} />}

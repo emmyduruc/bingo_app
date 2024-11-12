@@ -1,46 +1,79 @@
-# Getting Started with Create React App
+🎉 Bingo Game Documentation
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+🎯 Table of Contents
 
-## Available Scripts
+    •	🌐 Overview
+    •	✨ Key Features
+    •	🛠 Technologies Used
+    •	⚙️ Game Logic
+    •	💡 Decision-Making Process
+    •	🚀 Possible Improvements
 
-In the project directory, you can run:
+🌐 Overview
+My Bingo game interacts with a theme inspired by the bar “Landgang Brauerei (Bahrenfeld)” where real-life beer BINGO competitions brought excitement. Reimagined for a digital format, the app uses numbers and glasses as the theme and is optimized for all devices, ensuring a seamless experience on desktop, tablet, and mobile.
 
-### `npm start`
+✨ Key Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+    •	Multiple Bingo Wins: Players can achieve multiple bingos across rows, columns, and diagonals within a single game.
+    •	Responsive Layout: The game is optimized for different screen sizes to deliver a great experience across devices.
+    •	Dynamic Animation: A celebratory confetti animation enhances each new bingo win.
+    •	Reset Game Functionality: Players can start a fresh game with a new board and cleared bingo counts.
+    •	Customizable Theme: This theme uses numbers and glasses for a fun, social “Cheers!” atmosphere inspired by real events.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+🛠 Technologies Used
 
-### `npm test`
+    •	React: For building the UI components and managing state.
+    •	TypeScript: To provide type safety and improve readability.
+    •	Tailwind CSS: For responsive, modern styling without complex CSS files.
+    •	React-Confetti: For a confetti effect to celebrate every bingo achievement.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+⚙️ Game Logic
 
-### `npm run build`
+1. Multiple Bingo Wins
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+my game was designed to support multiple bingos without requiring a reset. The checkBingoHandler function keeps a count of bingoCount and uses a completedLines set to track which rows, columns, and diagonals have already been completed, preventing repeated bingos for the same lines.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+const completedLines = new Set<string>(); // Tracks completed rows, columns, and diagonals
+let bingoCount = 0; // Total bingos achieved
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+2. Tracking Bingo Progress
 
-### `npm run eject`
+In the handleCellClick function, the board is updated by marking each clicked cell as “selected.” The game then checks for any new bingos after each click.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+const handleCellClick = (index: number) => {
+const updatedBoard = board.map((cell, i) =>
+i === index ? { ...cell, selected: !cell.selected } : cell
+);
+checkBingoHandler(updatedBoard);
+};
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+3. Game Reset Logic
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+The resetGame function clears the board to a fresh state, resets the bingo count, and clears previously completed lines.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+const resetGame = (setBingoCount, setBoard, setCompletedLines) => {
+setBingoCount(0);
+setCompletedLines(new Set());
+const shuffledBoard = initializeBoard();
+setBoard(shuffledBoard);
+};
 
-## Learn More
+💡 Decision-Making Process
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Why Numbers and Glasses?
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+The “Cheers!” theme with numbers and glasses was inspired by a social setting. This theme brings a sense of fun and adds to the celebratory, casual drinking atmosphere that’s ideal for group interactions.
+
+Why Confetti Animation?
+
+To make each bingo win feel rewarding, the react-confetti library was used to create a celebratory confetti effect. This provides visual feedback, enhancing the enjoyment of each achievement.
+
+Why Use Tailwind CSS?
+
+Tailwind CSS was selected for its rapid styling capabilities and responsive design utilities. It simplifies adjustments for responsiveness, which is especially beneficial over traditional CSS, making the design adaptive across different screen sizes with minimal setup.
+
+🚀 Possible Improvements
+
+    1.	Enhanced Confetti and Animation: Adding customizable themes for the confetti effect based on the number of bingos could make each milestone feel unique.
+    2.	Leaderboard Functionality: Introducing a scoreboard could enable players to compete, keeping track of their bingo achievements.
+    3.	Theme Customization: Allowing users to choose from a variety of themes (e.g., meeting phrases, emojis) would make the game adaptable for different occasions.
